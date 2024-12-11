@@ -30,7 +30,14 @@ is_isomorphic('egg', 'add') -> True
 
 
 def is_isomorphic(s: str, t: str) -> bool:
-    return len(set(s)) == len(set(t)) == len(set(zip(s, t)))
+    s_to_t = {}
+    t_to_s = {}
+    for char_s, char_t in zip(s, t):
+        if s_to_t.get(char_s, char_t) != char_t or t_to_s.get(char_t, char_s) != char_s:
+            return False
+        s_to_t[char_s] = char_t
+        t_to_s[char_t] = char_s
+    return True
 
 
 """
@@ -98,8 +105,6 @@ def group_shifted(strings: list) -> list:
     groups = {}
     for string in strings:
         key = shift_key(string)
-        if key not in groups:
-            groups[key] = []
-        groups[key].append(string)
+        groups.setdefault(key, []).append(string)
 
     return list(groups.values())
